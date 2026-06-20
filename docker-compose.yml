@@ -1,0 +1,75 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-admin_password}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--username", "${MONGO_INITDB_ROOT_USERNAME:-admin}", "--password", "${MONGO_INITDB_ROOT_PASSWORD:-admin_password}", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend-node:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-node
+    restart: always
+    environment:
+      - PORT=${PORT:-3000}
+      - JWT_SECRET=${JWT_SECRET:-sua_chave_secreta_super_segura}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-admin_password}@mongodb:27017/estoque_central?authSource=admin}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:8080}
+    networks:
+      - app-network
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  backend-flask:
+    build:
+      context: ./backend/FlaskCrud
+      dockerfile: Dockerfile
+    container_name: backend-flask
+    restart: always
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-sua_chave_secreta_super_segura}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://${MONGO_INITDB_ROOT_USERNAME:-admin}:${MONGO_INITDB_ROOT_PASSWORD:-admin_password}@mongodb:27017/estoque_central?authSource=admin}
+    volumes:
+      - flask-data:/app/instance
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./meu-app
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-/api}
+        - VITE_API_FLASK_URL=${VITE_API_FLASK_URL:-/api-flask}
+    container_name: frontend-react
+    ports:
+      - "8080:8080"
+      # - "8443:8443" # Descomentar para HTTPS direto
+    # volumes:
+      # - ./certs:/etc/nginx/certs:ro # Mapear certificados locais em produção
+    networks:
+      - app-network
+    depends_on:
+      - backend-node
+      - backend-flask
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  flask-data:

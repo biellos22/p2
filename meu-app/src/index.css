@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: oklch(58.6% 0.187 261.2); /* Deep Indigo */
+  --color-brand-light: oklch(93.5% 0.035 261.2);
+  --color-brand-dark: oklch(25% 0.08 261.2);
+  --color-accent: oklch(62.8% 0.22 344); /* Modern Rose */
+  --color-success: oklch(72.3% 0.16 142); /* Emerald */
+  --color-warning: oklch(76.8% 0.16 70); /* Amber */
+  --color-danger: oklch(57.7% 0.22 26.5); /* Crimson Red */
+  
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --shadow-card: 0 4px 20px -2px oklch(0% 0 0 / 6%), 0 2px 8px -1px oklch(0% 0 0 / 4%);
+  --shadow-glow: 0 0 20px oklch(58.6% 0.187 261.2 / 15%);
+}

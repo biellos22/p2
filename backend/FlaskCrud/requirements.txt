@@ -1,0 +1,6 @@
+flask
+flask-sqlalchemy
+PyJWT
+gunicorn
+pymongo
+Flask-Limiter
