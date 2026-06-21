@@ -1,7 +1,13 @@
-# Atividade de Frontend e Integração com Backend
+<h1 align="center"> Laboratório de Programação Full Stack </h1>
+<img src="https://universidadedevassouras.edu.br/wp-content/uploads/2021/12/logo_horizontal_univasso.svg">
 
-**Autor:** Gabriel Victor
+<h5>Curso: Engenharia de Software<br>
+Disciplica: Laboratório de Programação Full Stack<br>
+Professor: <a>Fabricio Dias</a><br>
+Período: 6° Período<br>
+Aluno: Gabriel Victor Martins Carvalho</h5>
 
+#
 Este projeto é uma aplicação desenvolvida com React no frontend e duas APIs no backend, todas integradas em containers Docker usando Docker Compose.
 
 - **Frontend (React)**: Desenvolvido com React + Tailwind CSS v4, servido pelo Nginx na porta `8080`.
